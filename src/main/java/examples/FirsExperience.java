@@ -85,6 +85,7 @@ public class FirsExperience {
     }
 
     public static void updateDish(int id, Dish dish) {
+        //todo refactor
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement statement = con.prepareStatement(UPDATE_QUERY)) {
             statement.setString(1, dish.getName());
@@ -97,4 +98,6 @@ public class FirsExperience {
             e.printStackTrace();
         }
     }
+
+    //todo add method "get by id"
 }
