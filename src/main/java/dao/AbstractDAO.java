@@ -12,10 +12,12 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
     protected abstract String getInsertQuery();
     protected abstract String getUpdateQuery();
     protected abstract String getSelectQuery();
+    protected abstract String getDeleteQuery();
     protected abstract String getSelectByKeyQuery();
 
     protected abstract void fillCreateStatement(PreparedStatement statement, P obj);
     protected abstract void fillUpdateStatement(PreparedStatement statement, P obj);
+    protected abstract void fillDeleteStatement(PreparedStatement statement, V id);
     protected abstract P createObject(ResultSet rs);
 
 
@@ -72,7 +74,17 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
 
     @Override
     public boolean delete(V id) {
-        return false;
+        String DELETE_QUERY = getDeleteQuery();
+        int updateCount = 0;
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = con.prepareStatement(DELETE_QUERY)) {
+            fillDeleteStatement(statement, id);
+            statement.executeUpdate();
+            updateCount = statement.getUpdateCount();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return updateCount > 0;
     }
 
     @Override

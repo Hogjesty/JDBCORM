@@ -27,6 +27,12 @@ public class MysqlDishDao extends AbstractDAO<Dish, Integer, Integer> {
     }
 
     @Override
+    protected String getDeleteQuery() {
+        return "DELETE FROM `restaurant`.`dishes`" +
+                "WHERE `id` = ?;";
+    }
+
+    @Override
     protected String getSelectByKeyQuery() {
         return "SELECT * FROM `restaurant`.`dishes` WHERE `id` = ?;";
     }
@@ -51,6 +57,15 @@ public class MysqlDishDao extends AbstractDAO<Dish, Integer, Integer> {
             statement.setDouble(3, obj.getCost());
             statement.setInt(4, obj.getWeight());
             statement.setInt(5, obj.getId());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void fillDeleteStatement(PreparedStatement statement, Integer id) {
+        try {
+            statement.setInt(1, id);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
