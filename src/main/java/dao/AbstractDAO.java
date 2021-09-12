@@ -18,7 +18,7 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
     protected abstract void fillCreateStatement(PreparedStatement statement, P obj);
     protected abstract void fillUpdateStatement(PreparedStatement statement, P obj);
     protected abstract void fillDeleteStatement(PreparedStatement statement, V id);
-    protected abstract P createObject(ResultSet rs);
+    protected abstract P createObject(ResultSet resultSet);
 
 
     @Override
