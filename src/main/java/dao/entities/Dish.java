@@ -1,4 +1,4 @@
-package examples;
+package dao.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
