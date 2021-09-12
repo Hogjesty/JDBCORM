@@ -86,7 +86,7 @@ public class FirsExperience {
         }
     }
 
-    public static void updateDish(int id, Dish dish) {
+    public static void updateDish(Dish dish) {
         //todo refactor
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
              PreparedStatement statement = con.prepareStatement(UPDATE_QUERY)) {
@@ -94,7 +94,7 @@ public class FirsExperience {
             statement.setInt(2, dish.getCookingTime());
             statement.setDouble(3, dish.getCost());
             statement.setInt(4, dish.getWeight());
-            statement.setInt(5, id);
+            statement.setInt(5, dish.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
