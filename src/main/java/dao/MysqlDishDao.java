@@ -1,6 +1,6 @@
 package dao;
 
-import examples.Dish;
+import dao.entities.Dish;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +17,11 @@ public class MysqlDishDao extends AbstractDAO<Dish, Integer, Integer> {
     @Override
     protected String getSelectQuery() {
         return "SELECT * FROM `dishes`";
+    }
+
+    @Override
+    protected String getSelectByKeyQuery() {
+        return "SELECT * FROM `dishes` WHERE `id` = ?;";
     }
 
     @Override

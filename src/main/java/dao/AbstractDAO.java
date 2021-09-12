@@ -1,7 +1,5 @@
 package dao;
 
-import examples.Dish;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,10 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
 
     protected abstract String getInsertQuery();
     protected abstract String getSelectQuery();
+    protected abstract String getSelectByKeyQuery();
 
     protected abstract void fillStatement(PreparedStatement prstm, P obj);
+
     protected abstract P createObject(ResultSet rs);
 
 
@@ -38,7 +38,18 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
 
     @Override
     public P reedByKey(T key) {
-        return null;
+        String SELECT_BY_ID = getSelectByKeyQuery();
+        P object = null;
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement prstm = con.prepareStatement(SELECT_BY_ID)) {
+            prstm.setString(1, key.toString()); //todo refactor
+            ResultSet resultSet = prstm.executeQuery();
+            object = createObject(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return object;
     }
 
     @Override
