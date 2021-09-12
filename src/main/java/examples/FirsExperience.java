@@ -11,6 +11,7 @@ public class FirsExperience {
     private static final String USER = "root";
     private static final String PASS = "root";
     private static final String SELECT_QUERY = "SELECT * FROM `dishes`";
+    private static final String SELECT_BY_ID = "SELECT * FROM `restaurant`.`dishes` WHERE `id` = ?;";
     private static final String INSERT_QUERY = "INSERT INTO `dishes` " +
             "(`name`, `cooking_time(mins)`, `cost`, `weight(grams)`) " +
             "VALUE (?, ?, ?, ?);";
@@ -21,20 +22,7 @@ public class FirsExperience {
             "WHERE `id` = ?;";
 
 
-    public static void main(String[] args) {
-//        Dish some = new Dish(0, "Samsa", 20, 50.5, 300);
-//        createDish(some);
-
-//        List<Dish> dishes = getDishes();
-//        dishes.forEach(System.out::println);
-//        System.out.println(some);
-
-//        deleteDish(7);
-
-//        Dish samsa = new Dish(0, "Samsa", 20, 51.0, 300);
-//        updateDish(6, samsa);
-
-    }
+    public static void main(String[] args) {}
 
 
     public static List<Dish> getDishes() {
@@ -101,5 +89,23 @@ public class FirsExperience {
         }
     }
 
-    //todo add method "get by id"
+    public Dish reedByKey(int key) {
+        Dish dish = null;
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = con.prepareStatement(SELECT_BY_ID)) {
+            statement.setInt(1, key);
+            ResultSet resultSet = statement.executeQuery();
+            dish = new Dish(
+                    resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt(3),
+                    resultSet.getDouble("cost"),
+                    resultSet.getInt(5)
+            );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return dish;
+    }
 }
