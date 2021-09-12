@@ -35,9 +35,8 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return null; //todo refactor
     }
-
 
     @Override
     public P reedByKey(T key) {
@@ -94,8 +93,10 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(SELECT_QUERY)) {
-            while (rs.next()) {
-                list.add(createObject(rs));
+            while (true) {
+                P obj = createObject(rs);
+                if (obj == null) break;
+                list.add(obj);
             }
         } catch (SQLException e) {
             e.printStackTrace();

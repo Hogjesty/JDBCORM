@@ -23,7 +23,8 @@ public class MysqlDishDao extends AbstractDAO<Dish, Integer, Integer> {
 
     @Override
     protected String getSelectQuery() {
-        return "SELECT * FROM `restaurant`.`dishes`";
+        return "SELECT * FROM" +
+                " `restaurant`.`dishes`";
     }
 
     @Override
@@ -34,7 +35,8 @@ public class MysqlDishDao extends AbstractDAO<Dish, Integer, Integer> {
 
     @Override
     protected String getSelectByKeyQuery() {
-        return "SELECT * FROM `restaurant`.`dishes` WHERE `id` = ?;";
+        return "SELECT * FROM `restaurant`.`dishes` " +
+                "WHERE `id` = ?;";
     }
 
     @Override
@@ -72,16 +74,18 @@ public class MysqlDishDao extends AbstractDAO<Dish, Integer, Integer> {
     }
 
     @Override
-    protected Dish createObject(ResultSet rs) {
+    protected Dish createObject(ResultSet resultSet) {
         Dish dish = null;
         try {
-            dish = new Dish(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getInt(3),
-                    rs.getDouble("cost"),
-                    rs.getInt(5)
-            );
+            if (resultSet.next()) {
+                dish = new Dish(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt(3),
+                        resultSet.getDouble("cost"),
+                        resultSet.getInt(5)
+                );
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
