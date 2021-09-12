@@ -1,20 +1,26 @@
 package examples;
 
-import dao.MysqlDishDao;
+import dao.entities.Client;
+import dao.implementations.MysqlClientDAO;
+import dao.implementations.MysqlDishDAO;
 import dao.entities.Dish;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
-        MysqlDishDao mysqlDishDao = new MysqlDishDao();
+        MysqlDishDAO mysqlDishDao = new MysqlDishDAO();
+        MysqlClientDAO mysqlClientDAO = new MysqlClientDAO();
 
-        Dish potato = new Dish(0, "Potato", 15, 20.5, 200);
+        Dish potato = new Dish(8, "Potato", 20, 20.5, 200);
 
-        Dish dish = mysqlDishDao.reedByKey(2);
-        List<Dish> all = mysqlDishDao.getAll();
-        Dish dish1 = mysqlDishDao.create(potato);
-        boolean update = mysqlDishDao.update(potato);
+//        Dish dish = mysqlDishDao.reedByKey(2);
+//        List<Dish> all = mysqlDishDao.getAll();
+//        Dish dish1 = mysqlDishDao.create(potato);
+//        boolean update = mysqlDishDao.update(potato);
+//        boolean delete = mysqlDishDao.delete(8);
+        Client client = mysqlClientDAO.reedByKey("+380997472365");
+
+        System.out.println(client);
+
     }
 }
