@@ -10,11 +10,12 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
     private static final String PASS = "root";
 
     protected abstract String getInsertQuery();
+    protected abstract String getUpdateQuery();
     protected abstract String getSelectQuery();
     protected abstract String getSelectByKeyQuery();
 
-    protected abstract void fillStatement(PreparedStatement prstm, P obj);
-
+    protected abstract void fillCreateStatement(PreparedStatement statement, P obj);
+    protected abstract void fillUpdateStatement(PreparedStatement statement, P obj);
     protected abstract P createObject(ResultSet rs);
 
 
@@ -22,10 +23,10 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
     public P create(P obj) {
         String INSERT_QUERY = getInsertQuery();
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
-             PreparedStatement prstm = con.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
-            fillStatement(prstm, obj);
-            prstm.executeUpdate();
-            ResultSet resultSet = prstm.getGeneratedKeys();
+             PreparedStatement statement = con.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS)) {
+            fillCreateStatement(statement, obj);
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
 //            if (resultSet.next()) {
 //                dish.setId(resultSet.getInt(1));
 //            }
@@ -41,9 +42,9 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
         String SELECT_BY_ID = getSelectByKeyQuery();
         P object = null;
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
-             PreparedStatement prstm = con.prepareStatement(SELECT_BY_ID)) {
-            prstm.setString(1, key.toString()); //todo refactor
-            ResultSet resultSet = prstm.executeQuery();
+             PreparedStatement statement = con.prepareStatement(SELECT_BY_ID)) {
+            statement.setString(1, key.toString()); //todo refactor
+            ResultSet resultSet = statement.executeQuery();
             object = createObject(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,7 +55,19 @@ public abstract class AbstractDAO<P, T, V> implements GenericDAO<P, T, V> {
 
     @Override
     public boolean update(P obj) {
-        return false;
+        String UPDATE_QUERY = getUpdateQuery();
+        int updateCount = 0;
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS);
+             PreparedStatement statement = con.prepareStatement(UPDATE_QUERY)) {
+            fillUpdateStatement(statement, obj);
+            statement.executeUpdate();
+            updateCount = statement.getUpdateCount();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return updateCount > 0;
     }
 
     @Override
