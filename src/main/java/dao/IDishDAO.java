@@ -1,6 +1,6 @@
 package dao;
 
-import examples.Dish;
+import dao.entities.Dish;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package examples;
 
+import dao.entities.Dish;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +10,7 @@ public class FirsExperience {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/restaurant?serverTimezone=UTC";
     private static final String USER = "root";
     private static final String PASS = "root";
-    private static final String SELECT_QUERY = "SELECT * FROM dishes";
+    private static final String SELECT_QUERY = "SELECT * FROM `dishes`";
     private static final String INSERT_QUERY = "INSERT INTO `dishes` " +
             "(`name`, `cooking_time(mins)`, `cost`, `weight(grams)`) " +
             "VALUE (?, ?, ?, ?);";
